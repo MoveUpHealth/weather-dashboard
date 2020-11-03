@@ -1,0 +1,15 @@
+#forecast {
+    display: none;
+}
+
+#currentBtn, #forecastBtn {
+    font-size: 24px;
+    font-weight: 600;
+}
+
+#current, #forecast {
+    border: 1px solid lightgrey;
+    padding: 20px 20px 0px 20px;
+    border-radius: 0px 0px 5px 5px;
+}
+

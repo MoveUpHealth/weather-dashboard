@@ -126,3 +126,20 @@ $.ajax({
 })
 })
 
+$('#currentBtn').on('click', function(){
+      
+    $('#current').attr('style', 'display: block')
+    $('#current').attr('class', 'nav-link active')
+    $('#forecast').attr('style', 'display: none')
+    $('#forecast').attr('class', 'nav-link')   
+    
+})
+
+$('#forecastBtn').on('click', function(){
+
+    $('#current').attr('style', 'display: none')
+    $('#current').attr('class', 'nav-link')
+    $('#forecast').attr('style', 'display: block')
+    $('#forecast').attr('class', 'nav-link active')
+
+})
