@@ -8,7 +8,7 @@ var forecastDate = []
 var forecastIcon = []
 var forecastTemp = []
 var forecastHumidity = []
-
+var searchHistory = []
 if (currentDate < 10) {
   currentDate = '0' + currentDate;
 }
@@ -25,9 +25,9 @@ $.ajax({
     method: "GET"
 })
 .then(function(response){
-    console.log(response)
+    
     var iconId = response.weather[0].icon
-    console.log(iconId)
+    
     var iconSrc = "http://openweathermap.org/img/w/" + iconId + ".png"
     var city = response.name
     var temp = response.main.temp
@@ -49,22 +49,33 @@ $.ajax({
         url: uvUrl,
         method: "GET"
     }).then(function(uv){
-        console.log(uv)
+        
         var uvIndex = uv.value
         $("#currentUV").text("UV Index: " + uvIndex)
     })
 
-    var forecastUrl = 'https://api.openweathermap.org/data/2.5/forecast?q=' + cityName + '&units=imperial&appid=' + apiKey
+   
 
+
+
+})
+}
+
+function callForecast(){
+    var forecastUrl = 'https://api.openweathermap.org/data/2.5/forecast?q=' + cityName + '&units=imperial&appid=' + apiKey
+    forecastDate = []
+    forecastIcon = []
+    forecastTemp = []
+    forecastHumidity = []
     $.ajax({
         url: forecastUrl,
         method: "GET"
     }).then(function(cast){
-        console.log(cast.list)
+        
             for(i = 1; i< cast.list.length; i ++){
 
             if((i % 8) == 0){
-                console.log(i)
+                
             var castDate = cast.list[i].dt_txt
             var futureDate = castDate.split(" ")[0]
             var splitDate = futureDate.split('-')
@@ -106,7 +117,7 @@ $.ajax({
     var tempElement = document.getElementsByClassName('temperature')
     var humElement = document.getElementsByClassName('humidity')
     for(var x = 0; x < dateElement.length; x++){
-        console.log(x)
+
     var forecastIUrl = "http://openweathermap.org/img/w/" + forecastIcon[x] + ".png"
 
     dateElement[x].innerHTML = forecastDate[x]
@@ -117,16 +128,13 @@ $.ajax({
 
      } 
     })
-
-
-
-})
 }
 
 function init(){
     if(localStorage.getItem('cityName') !== 'null'){
         cityName = localStorage.getItem('cityName')
         callCity()
+        callForecast()
     }
     
 }
@@ -138,8 +146,30 @@ $(".btn-search").on("click", function(e) {
     e.preventDefault()
     $('.form-control').empty()
     cityName = $('.form-control').val().trim()
+    
     localStorage.setItem('cityName', cityName)
     callCity()
+    callForecast()
+        var newLi = $('<li>')
+        var newBtn = $('<button>')
+        newBtn.text(cityName)
+        newBtn.attr('class', 'btn btn-light historyBtn')
+        newBtn.attr('data-name', cityName)
+        newLi.attr('class', 'nav-item')
+        newLi.append(newBtn)
+        $('#search-history').prepend(newLi)
+
+        $('.historyBtn').on('click', function(target){
+            target.preventDefault()
+            console.log(target)
+            cityName = target.currentTarget.getAttribute('data-name')
+            localStorage.setItem('cityName', cityName)
+            callCity()
+            callForecast()
+        })
+        
+    
+    
 })
 
 $('#currentBtn').on('click', function(){
@@ -159,5 +189,7 @@ $('#forecastBtn').on('click', function(){
     $('#forecast').attr('class', 'nav-link active')
 
 })
+
+
 
 
