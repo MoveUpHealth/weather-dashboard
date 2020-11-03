@@ -3,6 +3,7 @@ var date = new Date();
 var year = date.getFullYear();
 var month = date.getMonth()+1;
 var currentDate = date.getDate();
+var cityName = ''
 var forecastDate = []
 var forecastIcon = []
 var forecastTemp = []
@@ -15,14 +16,10 @@ if (month < 10) {
   month = '0' + month;
 }
 
-
-//Search button click event...
-$(".btn-search").on("click", function(e) {
-    e.preventDefault()
-    $('.form-control').empty()
-    var cityName = $('.form-control').val().trim()
+function callCity(){
+    
     var queryUrl = 'https://api.openweathermap.org/data/2.5/weather?q=' + cityName + '&units=imperial&appid=' + apiKey
-
+    
 $.ajax({
     url: queryUrl,
     method: "GET"
@@ -124,6 +121,25 @@ $.ajax({
 
 
 })
+}
+
+function init(){
+    if(localStorage.getItem('cityName') !== 'null'){
+        cityName = localStorage.getItem('cityName')
+        callCity()
+    }
+    
+}
+
+init()
+
+//Search button click event...
+$(".btn-search").on("click", function(e) {
+    e.preventDefault()
+    $('.form-control').empty()
+    cityName = $('.form-control').val().trim()
+    localStorage.setItem('cityName', cityName)
+    callCity()
 })
 
 $('#currentBtn').on('click', function(){
@@ -143,3 +159,5 @@ $('#forecastBtn').on('click', function(){
     $('#forecast').attr('class', 'nav-link active')
 
 })
+
+
