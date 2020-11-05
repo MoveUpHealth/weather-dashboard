@@ -54,10 +54,6 @@ $.ajax({
         $("#currentUV").text("UV Index: " + uvIndex)
     })
 
-   
-
-
-
 })
 }
 
@@ -67,16 +63,19 @@ function callForecast(){
     forecastIcon = []
     forecastTemp = []
     forecastHumidity = []
+    console.log(forecastUrl)
     $.ajax({
         url: forecastUrl,
         method: "GET"
     }).then(function(cast){
-        
-            for(i = 1; i< cast.list.length; i ++){
-
-            if((i % 8) == 0){
-                
+            
+            for(i = 0; i < cast.list.length; i ++){
             var castDate = cast.list[i].dt_txt
+            console.log(castDate)
+            console.log(castDate.indexOf('15:00:00'))   
+            if(castDate.indexOf('15:00:00') !== -1){
+               console.log(i) 
+            
             var futureDate = castDate.split(" ")[0]
             var splitDate = futureDate.split('-')
             var castYear = splitDate[0]
@@ -92,25 +91,8 @@ function callForecast(){
             forecastTemp.push(castTemp)
             forecastHumidity.push(castHumidity)
             
-            } else if(i == 39) {
-                
-            
-            var castDate = cast.list[i].dt_txt
-            var futureDate = castDate.split(" ")[0]
-            var splitDate = futureDate.split('-')
-            var castYear = splitDate[0]
-            var castMonth = splitDate[1]
-            var castDay = splitDate[2]
-            var concatDate = castMonth + '/' + castDay + '/' + castYear
-            var castIconId = cast.list[i].weather[0].icon
-            var castTemp = cast.list[i].main.temp
-            var castHumidity = cast.list[i].main.humidity
-            
-            forecastDate.push(concatDate)
-            forecastIcon.push(castIconId) 
-            forecastTemp.push(castTemp)
-            forecastHumidity.push(castHumidity)
-    }
+          } 
+    
     }
     var dateElement = document.getElementsByClassName('date')
     var iconElement = document.getElementsByClassName('icon')
@@ -175,18 +157,18 @@ $(".btn-search").on("click", function(e) {
 $('#currentBtn').on('click', function(){
       
     $('#current').attr('style', 'display: block')
-    $('#current').attr('class', 'nav-link active')
+    $('#currentBtn').attr('class', 'nav-link active')
     $('#forecast').attr('style', 'display: none')
-    $('#forecast').attr('class', 'nav-link')   
+    $('#forecastBtn').attr('class', 'nav-link')   
     
 })
 
 $('#forecastBtn').on('click', function(){
 
     $('#current').attr('style', 'display: none')
-    $('#current').attr('class', 'nav-link')
+    $('#currentBtn').attr('class', 'nav-link')
     $('#forecast').attr('style', 'display: block')
-    $('#forecast').attr('class', 'nav-link active')
+    $('#forecastBtn').attr('class', 'nav-link active')
 
 })
 
