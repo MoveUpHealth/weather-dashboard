@@ -38,9 +38,9 @@ $.ajax({
     $(".city").text(city)
     $("#currentDate").text(month+'/' + currentDate + '/'+ year)
     $("#currentIcon").attr('src', iconSrc)
-    $("#currentTemp").text("Temperature: " + temp)
-    $("#currentHumidity").text("Humidity: " + humidity + "%")
-    $("currentWind").text("Wind Speed: " + speed)
+    $("#currentTemp").text(temp)
+    $("#currentHumidity").text(humidity + "%")
+    $("#currentWind").text(speed + ' mph')
 
     // to get UV Index...
     var uvUrl = 'http://api.openweathermap.org/data/2.5/uvi?lat=' + latitude + '&lon=' + longitude + '&appid=' + apiKey
@@ -51,7 +51,18 @@ $.ajax({
     }).then(function(uv){
         
         var uvIndex = uv.value
-        $("#currentUV").text("UV Index: " + uvIndex)
+        $("#currentUV").text(uvIndex)
+        if(uvIndex > 10){
+            $("#currentUV").attr('style', 'background: purple')
+        } else if(uvIndex > 7){
+            $("#currentUV").attr('style', 'background: red')
+        } else if (uvIndex > 5){
+            $("#currentUV").attr('style', 'background: orange')
+        } else if(uvIndex > 2){
+            $("#currentUV").attr('style', 'background: yellow')
+        } else {
+            $("#currentUV").attr('style', 'background: green')
+        }
     })
 
 })
@@ -104,7 +115,7 @@ function callForecast(){
 
     dateElement[x].innerHTML = forecastDate[x]
     iconElement[x].setAttribute('src', forecastIUrl)
-    tempElement[x].innerHTML = "Temp: " + forecastTemp[x]
+    tempElement[x].innerHTML = forecastTemp[x]
     humElement[x].innerHTML = "Humidity: " + forecastHumidity[x] + '%'
 
 
